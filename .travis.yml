@@ -1,0 +1,24 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t proguorammer/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run proguorammer/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t proguorammer/multi-client ./client
+  - docker build -t proguorammer/multi-nginx ./nginx
+  - docker build -t proguorammer/multi-server ./server
+  - docker build -t proguorammer/multi-worker ./worker
+  # take those images and push them to docker hub
+  # log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push proguorammer/multi-client
+  - docker push proguorammer/multi-nginx
+  - docker push proguorammer/multi-server
+  - docker push proguorammer/multi-worker
+
+

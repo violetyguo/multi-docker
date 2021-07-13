@@ -1,5 +1,6 @@
 sudo: required
-language: generic 
+language: generic
+
 services:
   - docker
 
@@ -14,12 +15,10 @@ after_success:
   - docker build -t proguorammer/multi-nginx ./nginx
   - docker build -t proguorammer/multi-server ./server
   - docker build -t proguorammer/multi-worker ./worker
-  # take those images and push them to docker hub
-  # log in to the docker CLI
+  # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
   - docker push proguorammer/multi-client
   - docker push proguorammer/multi-nginx
   - docker push proguorammer/multi-server
   - docker push proguorammer/multi-worker
-
-
